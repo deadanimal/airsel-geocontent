@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Geomapping - Edit {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Geomapping</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/">Dashboards</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'map' %}">Geomapping</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <form action="" method="POST">
+            {% csrf_token %}
+            <div class="card-body">
+              <h3>Edit Geotag</h3>
+              {{ geotag_form | crispy }}
+              <hr>
+              <div class="row">
+                <div class="col text-left">
+                  <a href="{% url 'map' %}" class="btn btn-outline-primary">Back</a>
+                </div>
+                <div class="col text-right">
+                  <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                  <button type="submit" name="edit" class="btn btn-primary">Edit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    {% include 'includes/footer.html' %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+  
+{% endblock javascripts %}

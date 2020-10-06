@@ -1,0 +1,80 @@
+<!--
+=========================================================
+* Argon Dashboard PRO - v1.2.0
+=========================================================
+* Product Page: https://www.creative-tim.com/product/argon-dashboard-pro
+* Copyright  Creative Tim (http://www.creative-tim.com)
+* Coded by www.creative-tim.com
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+  <meta name="author" content="Creative Tim">
+
+  <title>
+    Air Selangor - {% block title %}{% endblock %}
+  </title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+
+  <!-- Specific Page CSS goes HERE  -->  
+  {% block stylesheets %}{% endblock stylesheets %}
+
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+  
+  <!-- Turf -->
+  <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+  <script>var bbox = turf.bbox(features);</script>
+  
+  <!-- ApexChart -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body class="">
+  
+  {% include 'includes/sidebar.html' %}  
+  
+  <!-- Main content -->
+  <div class="main-content" id="panel">
+
+    {% include 'includes/navigation.html' %}
+
+    <!-- Page content -->
+    {% block content %}{% endblock content %}
+    
+  </div>
+  
+  <!-- Argon Scripts -->
+  <!-- Core -->
+  <script src="/static/assets/vendor/jquery/dist/jquery.min.js"></script>
+  <script src="/static/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/assets/vendor/js-cookie/js.cookie.js"></script>
+  <script src="/static/assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+  <script src="/static/assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+
+   <!-- Specific Page JS goes HERE  -->
+   {% block javascripts %}{% endblock javascripts %}
+  
+  <!-- Argon JS -->
+  <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+  <!-- Demo JS - remove this in your project -->
+  <script src="/static/assets/js/demo.min.js"></script>
+
+</body>
+</html>

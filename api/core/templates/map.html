@@ -1,0 +1,180 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Geomapping {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+  <!-- Page plugins -->
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css">
+{% endblock stylesheets %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Geomapping</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/">Dashboards</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Geomapping</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#modal-new-tag">New Tag</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div id="mapid" style="height:350px;"></div>
+          <script src="/static/assets/js/states-selangor.js"></script>
+          <script>
+            var map = L.map('mapid').setView([3.066, 101.548], 9);
+            {% comment %} var map_style = {
+              fillColor: '#FFEDA0',
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              dashArray: '3',
+              fillOpacity: 0.7,
+            }; {% endcomment %}
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+              attribution: 'Air Selangor',
+              maxZoom: 18,
+              id: 'mapbox/light-v9',
+              tileSize: 512,
+              zoomOffset: -1,
+              accessToken: 'pk.eyJ1IjoibXVoYWFmaWR6LXBpcGVsaW5lIiwiYSI6ImNrZnFna3cwYjB1dncycGxoZTEzeWYzcnYifQ.Wy6Mi4jHeC7HOH11VKKalA'
+            }).addTo(map);
+            {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}
+            {% for data in geotags %}
+              {% if data.type == 'point' %}
+                L.marker({{ data.location }}).bindPopup("{{ data.title }}").addTo(map);
+              {% endif %}
+              {% if data.type == 'polygon' %}
+                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("{{ data.title }}").addTo(map);
+              {% endif %}
+              {% if data.type == 'line' %}
+                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("{{ data.title }}").addTo(map);
+              {% endif %}
+            {% endfor %}
+            L.geoJson(statesData).addTo(map);
+          </script>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Geotags</h3>
+          </div>
+          <div class="table-responsive py-4">
+            <table class="table table-flush" id="datatable-buttons">
+              <thead class="thead-light">
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Location</th>
+                  <th>File</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Location</th>
+                  <th>File</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for geotag in geotags %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ geotag.title }}</td>
+                  <td>{{ geotag.description }}</td>
+                  <td>{{ geotag.get_type_display }}</td>
+                  <td>{{ geotag.get_status_display }}</td>
+                  <td><a href="#" onclick="map.flyTo([{{ geotag.latitude }},{{ geotag.longitude }}],12)"><i class="fas fa-map-marker-alt text-danger"></i> {{ geotag.latitude }}, {{ geotag.longitude }}</a></td>
+                  <td>{{ geotag.file }}</td>
+                  <td><a href="{% url 'map_edit' geotag.id %}" class=""><i class="fas fa-edit"></i></a></td>
+                </tr>
+                
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Create Tag -->
+    <div class="modal fade" id="modal-new-tag" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Tag New Location</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="" method="POST">
+            {% csrf_token %}
+            <div class="modal-body">
+              {{ geotag_form | crispy }}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" name="create" class="btn btn-primary">Create</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+  
+  <!-- Optional JS -->
+  <script src="/static/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('#datatable-buttons').DataTable();
+    } );
+  </script>
+{% endblock javascripts %}

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-appname-api-celery-beat
+  labels:
+    deployment: client-appname-api-celery-beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: client-appname-api-celery-beat
+  template:
+    metadata:
+      labels:
+        pod: client-appname-api-celery-beat
+    spec:
+      containers:
+        - name: client-appname-api-celery-beat
+          image: username/client-appname-api
+          # celery -A client-appname-api beat -l debug
+          command: ['celery', '-A', 'core', 'beat', '-l', 'debug']
+          envFrom:
+            - secretRef:
+                name: client-appname-api-secret

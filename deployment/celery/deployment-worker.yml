@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-appname-api-celery-worker
+  labels:
+    deployment: client-appname-api-celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: client-appname-api-celery-worker
+  template:
+    metadata:
+      labels:
+        pod: client-appname-api-celery-worker
+    spec:
+      containers:
+        - name: client-appname-api-celery-worker
+          image: username/client-appname-api
+          # celery -A client-appname-api worker -l debug
+          command: ['celery', '-A', 'core', 'worker', '-l', 'info']
+          envFrom:
+            - secretRef:
+                name: client-appname-api-secret            

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airsel-geocontent-deployment
+  labels:
+    app: airsel-geocontent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airsel-geocontent
+  template:
+    metadata:
+      labels:
+        app: airsel-geocontent
+    spec:
+      containers:
+      - name: airsel-geocontent
+        image: syafiqpipe/airsel-geocontent:1.0.2 #boleh tambah version
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        envFrom:
+          - secretRef:
+              name: airsel-geocontent-secret

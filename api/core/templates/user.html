@@ -1,0 +1,196 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard - Users {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+  <!-- Page plugins -->
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css">
+  <link rel="stylesheet" href="/static/assets/vendor/datatables.net-select-bs4/css/select.bootstrap4.min.css">
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Users</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/">Dashboards</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Users</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#modal-new-user">New User</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">List of Users</h3>
+          </div>
+          <div class="table-responsive py-4">
+            <table class="table table-flush" id="datatable-buttons">
+              <thead class="thead-light">
+                <tr>
+                  <th>#</th>
+                  <th>Location</th>
+                  <th>Pinpoint</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Group</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>#</th>
+                  <th>Username</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Group</th>
+                  <th></th>
+                </tr>
+              </tfoot>
+              <tbody>
+                {% for user in users %}
+                <tr>
+                  <th>{{ forloop.counter }}</th>
+                  <td>{{ user.username }}</td>
+                  <td>{{ user.first_name }}</td>
+                  <td>{{ user.last_name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.role.get_role_display }}</td>
+                  <td><a href="#" class="" data-toggle="modal" data-target="#modal-user-{{ forloop.counter }}"><i class="fas fa-edit"></i></a></td>
+                </tr>
+                
+                <!-- Modal Edit User -->
+                <div class="modal fade" id="modal-user-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ user.id }}">
+                        <div class="modal-body">
+                          <div class="form-group">
+                            <label for="input-username">Username</label>
+                            <input type="text" class="form-control" id="input-username" name="username" value="{{ user.username}}">
+                          </div>
+                          <div class="form-group">
+                            <label for="input-first_name">First Name</label>
+                            <input type="text" class="form-control" id="input-first_name" name="first_name" value="{{ user.first_name}}">
+                          </div>
+                          <div class="form-group">
+                            <label for="input-last_name">Last Name</label>
+                            <input type="text" class="form-control" id="input-last_name" name="last_name" value="{{ user.last_name}}">
+                          </div>
+                          <div class="form-group">
+                            <label for="input-email">Email</label>
+                            <input type="email" class="form-control" id="input-email" name="email" value="{{ user.email}}">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                          <button type="submit" name="edit" class="btn btn-primary">Edit</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+  </div>
+
+  <!-- Modal Create User -->
+  <div class="modal fade" id="modal-new-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Create New User</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="input-username">Username</label>
+              <input type="text" class="form-control" id="input-username" name="username" value="">
+            </div>
+            <div class="form-group">
+              <label for="input-email">Email</label>
+              <input type="email" class="form-control" id="input-email" name="email" value="">
+            </div>
+            <div class="form-group">
+              <label for="input-first_name">First Name</label>
+              <input type="text" class="form-control" id="input-first_name" name="first_name" value="">
+            </div>
+            <div class="form-group">
+              <label for="input-last_name">Last Name</label>
+              <input type="text" class="form-control" id="input-last_name" name="last_name" value="">
+            </div>
+            <div class="form-group">
+              <label for="input-password1">Password</label>
+              <input type="password" class="form-control" id="input-password1" name="password1" value="">
+            </div>
+            <div class="form-group">
+              <label for="input-password2">Confirmation Password</label>
+              <input type="password" class="form-control" id="input-password2" name="password2" value="">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" name="create" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
+  <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
+  
+  <!-- Optional JS -->
+  <script src="/static/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('#datatable-buttons').DataTable();
+    } );
+  </script>
+{% endblock javascripts %}

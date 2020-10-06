@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: airsel-geocontent-my-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "airsel-geocontent-my-prod"
+spec:
+  tls:
+  - hosts:
+    - airsel-geocontent.pipe.my #guna prototype.com.my untuk prototype
+
+    secretName: airsel-geocontent-my-prod
+
+  rules:
+  - host: airsel-geocontent.pipe.my
+    http:
+      paths:
+      - backend:
+          serviceName: airsel-geocontent
+          servicePort: 5000    
