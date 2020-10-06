@@ -163,7 +163,63 @@
     </div>
 
     <div class="row">
-      <div class="col-xl-12">
+      <div class="col-lg-6">
+        <!--* Card header *-->
+        <!--* Card body *-->
+        <!--* Card init *-->
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header">
+            <!-- Surtitle -->
+            <h6 class="surtitle">Overview</h6>
+            <!-- Title -->
+            <h5 class="h3 mb-0">Cases</h5>
+          </div>
+          <!-- Card body -->
+          <div class="card-body">
+            <div id="chart-pie"></div>
+            <script>
+              var options = {
+                series: [44, 55, 57, 56,22,32,65,32],
+                chart: {
+                type: 'polarArea',
+                height: 350
+              },
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  columnWidth: '55%',
+                  endingShape: 'rounded'
+                },
+              },
+              dataLabels: {
+                enabled: false
+              },
+              stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+              },
+              labels: ["Gombak", "Hulu Langat", "Hulu Selangor", "Klang","Kuala Langat","Petaling","Sabak Bernam","Sepang"],
+              fill: {
+                opacity: 1
+              },
+              tooltip: {
+                y: {
+                  formatter: function (val) {
+                    return "" + val + " cases"
+                  }
+                }
+              }
+              };
+
+              var chart = new ApexCharts(document.querySelector("#chart-pie"), options);
+              chart.render();
+            </script>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
         <!--* Card header *-->
         <!--* Card body *-->
         <!--* Card init *-->
