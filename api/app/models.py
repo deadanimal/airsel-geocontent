@@ -45,7 +45,7 @@ class Geotag(models.Model):
     )
     TYPE_CHOICE = (
         ('point', 'Point'),
-        ('line', 'Line'),
+        ('linestring', 'Line'),
         ('polygon', 'Polygon'),
     )
 

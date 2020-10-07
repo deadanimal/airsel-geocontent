@@ -30,9 +30,6 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
-            <a href="#" class="btn btn-sm btn-neutral" data-toggle="modal" data-target="#modal-new-tag">New Tag</a>
-          </div>
         </div>
       </div>
     </div>
@@ -80,7 +77,7 @@
               {% if data.type == 'polygon' %}
                 L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("{{ data.title }}").addTo(map);
               {% endif %}
-              {% if data.type == 'line' %}
+              {% if data.type == 'linestring' %}
                 L.polyline({{ data.location }}, {color: 'green'}).bindPopup("{{ data.title }}").addTo(map);
               {% endif %}
             {% endfor %}
@@ -128,10 +125,7 @@
                 lat = coordinates[0];
                 long = coordinates[1];
               }
-              document.getElementById("draw_type").value = data.features[0].geometry.type;
               str_coordinate = JSON.stringify(coordinates);
-              console.log(str_coordinate);
-              document.getElementById("draw_coordinate").value = str_coordinate;
               document.getElementById("id_location").value = str_coordinate;
               document.getElementById("id_latitude").value = lat;
               document.getElementById("id_longitude").value = long;
@@ -203,9 +197,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Tag New Location</h5>
-            <button type="button" class="close leaflet-draw-edit-remove" data-dismiss="modal" aria-label="Close">
+            <form action="" method="GET">
+            <button type="submit" class="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
+            </form>
           </div>
           <form action="" method="POST">
             {% csrf_token %}
