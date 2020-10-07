@@ -151,7 +151,7 @@
               {% if data.type == 'polygon' %}
                 L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
-              {% if data.type == 'line' %}
+              {% if data.type == 'linestring' %}
                 L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
             {% endfor %}
