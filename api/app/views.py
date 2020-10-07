@@ -24,10 +24,11 @@ def map(request):
     geotag_form = GeotagCreateForm()
     geotags = Geotag.objects.all()
     if request.method == 'POST':
-        geotag_form = GeotagCreateForm(request.POST, request.FILES or None)
-        if geotag_form.is_valid():
-            geotag_form.save()
-            return redirect('map')
+        if 'create' in request.POST:
+            geotag_form = GeotagCreateForm(request.POST, request.FILES or None)
+            if geotag_form.is_valid():
+                geotag_form.save()
+        return redirect('map')
     context = {'geotag_form':geotag_form, 'geotags':geotags}
     return render(request, "map.html", context)
 

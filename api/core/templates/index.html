@@ -146,13 +146,13 @@
             }).addTo(map);
             {% for data in geotags %}
               {% if data.type == 'point' %}
-                L.marker({{ data.location }}).bindPopup("{{ data.title }}").addTo(map);
+                L.marker({{ data.location }}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
               {% if data.type == 'polygon' %}
-                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("{{ data.title }}").addTo(map);
+                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
               {% if data.type == 'line' %}
-                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("{{ data.title }}").addTo(map);
+                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
             {% endfor %}
             {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}

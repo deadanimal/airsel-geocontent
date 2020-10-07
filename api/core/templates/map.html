@@ -72,13 +72,13 @@
             {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}
             {% for data in geotags %}
               {% if data.type == 'point' %}
-                L.marker({{ data.location }}).bindPopup("{{ data.title }}").addTo(map);
+                L.marker({{ data.location }}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
               {% if data.type == 'polygon' %}
-                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("{{ data.title }}").addTo(map);
+                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
               {% if data.type == 'linestring' %}
-                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("{{ data.title }}").addTo(map);
+                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
               {% endif %}
             {% endfor %}
             L.geoJson(statesData).addTo(map);
@@ -209,7 +209,7 @@
               {{ geotag_form | crispy }}
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" name="close" class="btn btn-secondary">Close</button>
               <button type="submit" name="create" class="btn btn-primary">Create</button>
             </div>
           </form>
