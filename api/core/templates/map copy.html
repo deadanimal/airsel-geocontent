@@ -193,7 +193,13 @@
   <script src="/static/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
   <script>
     $(document).ready(function() {
-        $('#datatable-buttons').DataTable();
-    } );
+        {% comment %} $('#datatable-buttons').DataTable(); {% endcomment %}
+        $('#datatable-buttons').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+                'print'
+            ]
+        });
+    });
   </script>
 {% endblock javascripts %}

@@ -128,7 +128,6 @@
                   <th>Action</th>
                   <th>Description</th>
                   <th>TimeStamp</th>
-                  <th></th>
                 </tr>
               </thead>
               <tfoot>
@@ -140,7 +139,6 @@
                   <th>Action</th>
                   <th>Description</th>
                   <th>TimeStamp</th>
-                  <th></th>
                 </tr>
               </tfoot>
               <tbody>
@@ -199,12 +197,13 @@
   <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
   <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
   
-  <!-- Optional JS -->
+  <!-- DataTables -->
   <script src="/static/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>
   <script src="/static/assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-  <script>
-    $(document).ready(function() {
-        $('#datatable-buttons').DataTable();
-    } );
-  </script>
+  <script src="/static/assets/vendor/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/assets/vendor/datatables.net-select/js/dataTables.select.min.js"></script>
 {% endblock javascripts %}
