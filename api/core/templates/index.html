@@ -128,7 +128,12 @@
             <!-- Surtitle -->
             <h6 class="surtitle">Cases Overview</h6>
             <!-- Title -->
-            <h5 class="h3 mb-0">Selangor Region</h5>
+            <div class="d-flex">
+              <div>
+                <h5 class="h3 mb-0">Selangor Region</h5>
+              </div>
+              <a href="{% url 'map' %}" class="btn btn-primary btn-sm ml-auto">Update</a>
+            </div>
           </div>
           <div class="card-body">
             <div id="mapid" style="height:350px;"></div>
