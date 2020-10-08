@@ -126,10 +126,10 @@
                             <label class="form-control-label">Role</label>
                             <select class="form-control" name="role" required>
                               <option>-------</option>
-                              <option {% if role.role == 'admin' %}selected{%endif%} value="admin">Admin</option>
-                              <option {% if role.role == 'staff' %}selected{%endif%} value="staff">Staff</option>
-                              <option {% if role.role == 'accountant' %}selected{%endif%} value="accountant">Accountant</option>
-                              <option {% if role.role == 'technician' %}selected{%endif%} value="technician">Technician</option>
+                              <option {% if role.role == 'admin' %}selected{% endif %} value="admin">Admin</option>
+                              <option {% if role.role == 'staff' %}selected{% endif %} value="staff">Staff</option>
+                              <option {% if role.role == 'accountant' %}selected{% endif %} value="accountant">Accountant</option>
+                              <option {% if role.role == 'technician' %}selected{% endif %} value="technician">Technician</option>
                             </select>
                           </div>
                           <div class="form-group">
