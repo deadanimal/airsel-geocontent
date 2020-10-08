@@ -141,6 +141,13 @@ DATABASES = {
     }
 }
 
+import dj_database_url
+db_from_env = dj_database_url.config(default=config('DATABASE_URL', default=None), conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+if any(db_from_env):
+    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -189,3 +196,7 @@ STATICFILES_DIRS = (
 )
 #############################################################
 #############################################################
+
+## GEOS Setting
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH') 

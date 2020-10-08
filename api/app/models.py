@@ -55,5 +55,5 @@ class Geotag(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICE, null=True, blank=True)
     latitude = models.CharField(max_length=100, null=True, blank=True)
     longitude = models.CharField(max_length=100, null=True, blank=True)
-    location = models.TextField(max_length=500, null=True, blank=True)
+    location = models.TextField(max_length=1000, null=True, blank=True)
     file = models.FileField(max_length=100, null=True, blank=True)
