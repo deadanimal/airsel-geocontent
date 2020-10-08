@@ -40,100 +40,109 @@
     <div class="row">
       <div class="col">
         <div class="card">
-          <div id="mapid" style="height:350px;"></div>
-          <script src="/static/assets/js/states-selangor.js"></script>
-          <script>
-            var map = L.map('mapid').setView([3.066, 101.548], 9),
-              drawnItems = new L.FeatureGroup().addTo(map),
-              editActions = [
-                LeafletToolbar.EditAction.Popup.Edit,
-                LeafletToolbar.EditAction.Popup.Delete,
-              LeafletToolbar.ToolbarAction.extendOptions({
-                toolbarIcon: { 
-                  className: 'leaflet-color-picker', 
-                  html: '<span class="fa fa-eyedropper"></span>' 
-                },
-                subToolbar: new LeafletToolbar({ actions: [
-                  L.ColorPicker.extendOptions({ color: '#db1d0f' }),
-                  L.ColorPicker.extendOptions({ color: '#025100' }),
-                  L.ColorPicker.extendOptions({ color: '#ffff00' }),
-                  L.ColorPicker.extendOptions({ color: '#0000ff' })
-                ]})
-              })
-            ];
-            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-              attribution: 'Air Selangor',
-              maxZoom: 18,
-              id: 'mapbox/light-v9',
-              tileSize: 512,
-              zoomOffset: -1,
-              accessToken: 'pk.eyJ1IjoibXVoYWFmaWR6LXBpcGVsaW5lIiwiYSI6ImNrZnFna3cwYjB1dncycGxoZTEzeWYzcnYifQ.Wy6Mi4jHeC7HOH11VKKalA'
-            }).addTo(map);
-            {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}
-            {% for data in geotags %}
-              {% if data.type == 'point' %}
-                L.marker({{ data.location }}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
-              {% endif %}
-              {% if data.type == 'polygon' %}
-                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
-              {% endif %}
-              {% if data.type == 'linestring' %}
-                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
-              {% endif %}
-            {% endfor %}
-            L.geoJson(statesData).addTo(map);
-          </script>
-          <script>
-            new LeafletToolbar.DrawToolbar({
-              position: 'topleft',
-            }).addTo(map);
+          <div class="card-header">
+            <!-- Surtitle -->
+            <h6 class="surtitle">Cases Overview</h6>
+            <!-- Title -->
+            <h5 class="h3 mb-0">Selangor Region</h5>
+            <p class="mb-0"><small>*Draw on map to start tagging</small></p>
+          </div>
+          <div class="card-body">
+            <div id="mapid" style="height:350px;"></div>
+            <script src="/static/assets/js/states-selangor.js"></script>
+            <script>
+              var map = L.map('mapid').setView([3.066, 101.548], 9),
+                drawnItems = new L.FeatureGroup().addTo(map),
+                editActions = [
+                  LeafletToolbar.EditAction.Popup.Edit,
+                  LeafletToolbar.EditAction.Popup.Delete,
+                LeafletToolbar.ToolbarAction.extendOptions({
+                  toolbarIcon: { 
+                    className: 'leaflet-color-picker', 
+                    html: '<span class="fa fa-eyedropper"></span>' 
+                  },
+                  subToolbar: new LeafletToolbar({ actions: [
+                    L.ColorPicker.extendOptions({ color: '#db1d0f' }),
+                    L.ColorPicker.extendOptions({ color: '#025100' }),
+                    L.ColorPicker.extendOptions({ color: '#ffff00' }),
+                    L.ColorPicker.extendOptions({ color: '#0000ff' })
+                  ]})
+                })
+              ];
+              L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Air Selangor',
+                maxZoom: 18,
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoibXVoYWFmaWR6LXBpcGVsaW5lIiwiYSI6ImNrZnFna3cwYjB1dncycGxoZTEzeWYzcnYifQ.Wy6Mi4jHeC7HOH11VKKalA'
+              }).addTo(map);
+              {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}
+              {% for data in geotags %}
+                {% if data.type == 'point' %}
+                  L.marker({{ data.location }}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
+                {% endif %}
+                {% if data.type == 'polygon' %}
+                  L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
+                {% endif %}
+                {% if data.type == 'linestring' %}
+                  L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
+                {% endif %}
+              {% endfor %}
+              L.geoJson(statesData).addTo(map);
+            </script>
+            <script>
+              new LeafletToolbar.DrawToolbar({
+                position: 'topleft',
+              }).addTo(map);
 
-            map.on('draw:created', function(evt) {
-              var	type = evt.layerType,
-                layer = evt.layer;
-              
-              drawnItems.addLayer(layer);
+              map.on('draw:created', function(evt) {
+                var	type = evt.layerType,
+                  layer = evt.layer;
+                
+                drawnItems.addLayer(layer);
 
-              layer.on('click', function(event) {
-                new LeafletToolbar.EditToolbar.Popup(event.latlng, {
-                  actions: editActions
-                }).addTo(map, layer);
-              });
+                layer.on('click', function(event) {
+                  new LeafletToolbar.EditToolbar.Popup(event.latlng, {
+                    actions: editActions
+                  }).addTo(map, layer);
+                });
 
-              // Extract GeoJson from drawnItems
-              var data = drawnItems.toGeoJSON();
-              console.log(data.features[0]);
-              var coordinates = data.features[0].geometry.coordinates;
-              var lat = 0, long = 0;
-              if (typeof coordinates[0] == "object") {
-                if (typeof coordinates[0][0] == "object") {
-                  for (var i=0; i<coordinates[0].length; i++) {
-                    var tempcoord = [coordinates[0][i][1],coordinates[0][i][0]];
-                    coordinates[0][i] = tempcoord;
+                // Extract GeoJson from drawnItems
+                var data = drawnItems.toGeoJSON();
+                console.log(data.features[0]);
+                var coordinates = data.features[0].geometry.coordinates;
+                var lat = 0, long = 0;
+                if (typeof coordinates[0] == "object") {
+                  if (typeof coordinates[0][0] == "object") {
+                    for (var i=0; i<coordinates[0].length; i++) {
+                      var tempcoord = [coordinates[0][i][1],coordinates[0][i][0]];
+                      coordinates[0][i] = tempcoord;
+                    }
+                    lat = coordinates[0][0][0];
+                    long = coordinates[0][0][1];
+                  } else {
+                    for (var i=0; i<coordinates.length; i++) {
+                      coordinates[i].reverse();
+                      lat = coordinates[0][0];
+                      long = coordinates[0][1];
+                    }
                   }
-                  lat = coordinates[0][0][0];
-                  long = coordinates[0][0][1];
                 } else {
-                  for (var i=0; i<coordinates.length; i++) {
-                    coordinates[i].reverse();
-                    lat = coordinates[0][0];
-                    long = coordinates[0][1];
-                  }
+                  coordinates.reverse();
+                  lat = coordinates[0];
+                  long = coordinates[1];
                 }
-              } else {
-                coordinates.reverse();
-                lat = coordinates[0];
-                long = coordinates[1];
-              }
-              str_coordinate = JSON.stringify(coordinates);
-              document.getElementById("id_location").value = str_coordinate;
-              document.getElementById("id_latitude").value = lat;
-              document.getElementById("id_longitude").value = long;
-              document.getElementById("id_type").value = data.features[0].geometry.type.toLowerCase();
-              drawnItems = new L.FeatureGroup().addTo(map);
-              $('#modal-new-tag').modal('show');
-            });
-          </script>
+                str_coordinate = JSON.stringify(coordinates);
+                document.getElementById("id_location").value = str_coordinate;
+                document.getElementById("id_latitude").value = lat;
+                document.getElementById("id_longitude").value = long;
+                document.getElementById("id_type").value = data.features[0].geometry.type.toLowerCase();
+                drawnItems = new L.FeatureGroup().addTo(map);
+                $('#modal-new-tag').modal('show');
+              });
+            </script>
+          </div>
         </div>
       </div>
     </div>
@@ -179,7 +188,7 @@
                   <td>{{ geotag.get_type_display }}</td>
                   <td>{{ geotag.get_status_display }}</td>
                   <td><a href="#" onclick="map.flyTo([{{ geotag.latitude }},{{ geotag.longitude }}],12)"><i class="fas fa-map-marker-alt text-danger"></i> {{ geotag.latitude }}, {{ geotag.longitude }}</a></td>
-                  <td>{{ geotag.file }}</td>
+                  <td>{% if geotag.file %}<a href="#"><i class="fas fa-file-download"></i></a>{% else %}None{% endif %}</td>
                   <td><a href="{% url 'map_edit' geotag.id %}" class=""><i class="fas fa-edit"></i></a></td>
                 </tr>
                 
@@ -203,7 +212,7 @@
             </button>
             </form>
           </div>
-          <form action="" method="POST">
+          <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-body">
               {{ geotag_form | crispy }}

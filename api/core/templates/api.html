@@ -49,63 +49,142 @@
           </div>
           <!-- Card body -->
           <div class="card-body">
-            <div id="chart-api"></div>
+            <div id="chart-api" style="width:100%;height:400px;"></div>
+            <!-- Chart code -->
             <script>
-              var options = {
-                series: [{
-                name: 'GET',
-                data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-              }, {
-                name: 'POST',
-                data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-              }, {
-                name: 'PUT',
-                data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-              }, {
-                name: 'DELETE',
-                data: [25, 32, 26, 16, 65, 12, 43, 11, 19]
-              }],
-                chart: {
-                type: 'bar',
-                height: 350
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: '55%',
-                  endingShape: 'rounded'
-                },
-              },
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-              },
-              xaxis: {
-                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-              },
-              yaxis: {
-                title: {
-                  text: 'requests'
-                }
-              },
-              fill: {
-                opacity: 1
-              },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return "" + val + " requests"
-                  }
-                }
-              }
-              };
+              am4core.ready(function() {
 
-              var chart = new ApexCharts(document.querySelector("#chart-api"), options);
-              chart.render();
+              // Themes begin
+              am4core.useTheme(am4themes_animated);
+              // Themes end
+
+
+
+              var chart = am4core.create('chart-api', am4charts.XYChart)
+              chart.colors.step = 2;
+
+              chart.legend = new am4charts.Legend()
+              chart.legend.position = 'top'
+              chart.legend.paddingBottom = 20
+              chart.legend.labels.template.maxWidth = 95
+
+              var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+              xAxis.dataFields.category = 'category'
+              xAxis.renderer.cellStartLocation = 0.1
+              xAxis.renderer.cellEndLocation = 0.9
+              xAxis.renderer.grid.template.location = 0;
+
+              var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+              yAxis.min = 0;
+
+              function createSeries(value, name) {
+                  var series = chart.series.push(new am4charts.ColumnSeries())
+                  series.dataFields.valueY = value
+                  series.dataFields.categoryX = 'category'
+                  series.name = name
+
+                  series.events.on("hidden", arrangeColumns);
+                  series.events.on("shown", arrangeColumns);
+
+                  var bullet = series.bullets.push(new am4charts.LabelBullet())
+                  bullet.interactionsEnabled = false
+                  bullet.dy = 30;
+                  bullet.label.text = '{valueY}'
+                  bullet.label.fill = am4core.color('#ffffff')
+
+                  return series;
+              }
+
+              chart.data = [
+                  {
+                      category: 'Jan',
+                      value1: 40,
+                      value2: 55,
+                      value3: 60,
+                      value4: 40
+                  },
+                  {
+                      category: 'Feb',
+                      value1: 32,
+                      value2: 54,
+                      value3: 10,
+                      value4: 45
+                  },
+                  {
+                      category: 'Mar',
+                      value1: 12,
+                      value2: 54,
+                      value3: 78,
+                      value4: 34
+                  },
+                  {
+                      category: 'Apr',
+                      value1: 34,
+                      value2: 44,
+                      value3: 23,
+                      value4: 26
+                  },
+                  {
+                      category: 'May',
+                      value1: 17,
+                      value2: 34,
+                      value3: 38,
+                      value4: 65
+                  },
+                  {
+                      category: 'Jun',
+                      value1: 43,
+                      value2: 63,
+                      value3: 75,
+                      value4: 34
+                  }
+              ]
+
+
+              createSeries('value1', 'GET');
+              createSeries('value2', 'POST');
+              createSeries('value3', 'PUT');
+              createSeries('value4', 'DELETE');
+
+              function arrangeColumns() {
+
+                  var series = chart.series.getIndex(0);
+
+                  var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+                  if (series.dataItems.length > 1) {
+                      var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+                      var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+                      var delta = ((x1 - x0) / chart.series.length) * w;
+                      if (am4core.isNumber(delta)) {
+                          var middle = chart.series.length / 2;
+
+                          var newIndex = 0;
+                          chart.series.each(function(series) {
+                              if (!series.isHidden && !series.isHiding) {
+                                  series.dummyData = newIndex;
+                                  newIndex++;
+                              }
+                              else {
+                                  series.dummyData = chart.series.indexOf(series);
+                              }
+                          })
+                          var visibleCount = newIndex;
+                          var newMiddle = visibleCount / 2;
+
+                          chart.series.each(function(series) {
+                              var trueIndex = chart.series.indexOf(series);
+                              var newIndex = series.dummyData;
+
+                              var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+                              series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                              series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                          })
+                      }
+                  }
+              }
+
+              }); // end am4core.ready()
             </script>
           </div>
         </div>

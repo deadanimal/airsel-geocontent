@@ -124,40 +124,48 @@
     <div class="row">
       <div class="col">
         <div class="card">
-          <div id="mapid" style="height:350px;"></div>
-          <script src="/static/assets/js/states-selangor.js"></script>
-          <script>
-            var map = L.map('mapid').setView([3.066, 101.548], 9);
-            {% comment %} var map_style = {
-              fillColor: '#FFEDA0',
-              weight: 2,
-              opacity: 1,
-              color: 'white',
-              dashArray: '3',
-              fillOpacity: 0.7,
-            }; {% endcomment %}
-            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-              attribution: 'Air Selangor',
-              maxZoom: 18,
-              id: 'mapbox/light-v9',
-              tileSize: 512,
-              zoomOffset: -1,
-              accessToken: 'pk.eyJ1IjoibXVoYWFmaWR6LXBpcGVsaW5lIiwiYSI6ImNrZnFna3cwYjB1dncycGxoZTEzeWYzcnYifQ.Wy6Mi4jHeC7HOH11VKKalA'
-            }).addTo(map);
-            {% for data in geotags %}
-              {% if data.type == 'point' %}
-                L.marker({{ data.location }}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
-              {% endif %}
-              {% if data.type == 'polygon' %}
-                L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
-              {% endif %}
-              {% if data.type == 'linestring' %}
-                L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
-              {% endif %}
-            {% endfor %}
-            {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}
-            L.geoJson(statesData).addTo(map);
-          </script>
+          <div class="card-header">
+            <!-- Surtitle -->
+            <h6 class="surtitle">Cases Overview</h6>
+            <!-- Title -->
+            <h5 class="h3 mb-0">Selangor Region</h5>
+          </div>
+          <div class="card-body">
+            <div id="mapid" style="height:350px;"></div>
+            <script src="/static/assets/js/states-selangor.js"></script>
+            <script>
+              var map = L.map('mapid').setView([3.066, 101.548], 9);
+              {% comment %} var map_style = {
+                fillColor: '#FFEDA0',
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7,
+              }; {% endcomment %}
+              L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Air Selangor',
+                maxZoom: 18,
+                id: 'mapbox/light-v9',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoibXVoYWFmaWR6LXBpcGVsaW5lIiwiYSI6ImNrZnFna3cwYjB1dncycGxoZTEzeWYzcnYifQ.Wy6Mi4jHeC7HOH11VKKalA'
+              }).addTo(map);
+              {% for data in geotags %}
+                {% if data.type == 'point' %}
+                  L.marker({{ data.location }}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
+                {% endif %}
+                {% if data.type == 'polygon' %}
+                  L.polygon({{ data.location }}, {color: 'orange'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
+                {% endif %}
+                {% if data.type == 'linestring' %}
+                  L.polyline({{ data.location }}, {color: 'green'}).bindPopup("<h4>{{ data.title }}</h4>{{ data.description }}").addTo(map);
+                {% endif %}
+              {% endfor %}
+              {% comment %} L.geoJson(statesData, {style: map_style}).addTo(map); {% endcomment %}
+              L.geoJson(statesData).addTo(map);
+            </script>
+          </div>
         </div>
       </div>
     </div>
@@ -173,48 +181,146 @@
             <!-- Surtitle -->
             <h6 class="surtitle">Overview</h6>
             <!-- Title -->
-            <h5 class="h3 mb-0">Cases by Region</h5>
+            <h5 class="h3 mb-0">Cases by Region (2019)</h5>
           </div>
           <!-- Card body -->
           <div class="card-body">
-            <div id="chart-pie"></div>
+            <div id="chart-pie" style="width:100%;height:500px;"></div>
+            <!-- Chart code -->
             <script>
-              var options = {
-                series: [44, 55, 57, 56,22,32,65,32],
-                chart: {
-                type: 'polarArea',
-                height: 350
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: '55%',
-                  endingShape: 'rounded'
-                },
-              },
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-              },
-              labels: ["Gombak", "Hulu Langat", "Hulu Selangor", "Klang","Kuala Langat","Petaling","Sabak Bernam","Sepang"],
-              fill: {
-                opacity: 1
-              },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return "" + val + " cases"
-                  }
-                }
-              }
-              };
+              am4core.ready(function() {
 
-              var chart = new ApexCharts(document.querySelector("#chart-pie"), options);
-              chart.render();
+              // Themes begin
+              am4core.useTheme(am4themes_animated);
+              // Themes end
+
+              var chart = am4core.create("chart-pie", am4charts.RadarChart);
+              chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+              chart.data = [
+                {
+                  category: "Sabak Bernam",
+                  value1: 5,
+                  value2: 12,
+                  value3: 4,
+                  value4: 14
+                },
+                {
+                  category: "Hulu Langat",
+                  value1: 11,
+                  value2: 4,
+                  value3: 2,
+                  value4: 4
+                },
+                {
+                  category: "Hulu Selangor",
+                  value1: 7,
+                  value2: 6,
+                  value3: 6,
+                  value4: 2
+                },
+                {
+                  category: "Klang",
+                  value1: 13,
+                  value2: 8,
+                  value3: 3,
+                  value4: 2
+                },
+                {
+                  category: "Kuala Langat",
+                  value1: 12,
+                  value2: 10,
+                  value3: 5,
+                  value4: 1
+                },
+                {
+                  category: "Petaling",
+                  value1: 15,
+                  value2: 12,
+                  value3: 7,
+                  value4: 4
+                },
+                {
+                  category: "Sepang",
+                  value1: 15,
+                  value2: 2,
+                  value3: 14,
+                  value4: 4
+                },
+                {
+                  category: "Gombak",
+                  value1: 8,
+                  value2: 2,
+                  value3: 4,
+                  value4: 3
+                }
+              ];
+
+              //chart.padding(20, 20, 20, 20);
+              chart.colors.step = 4;
+
+              var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+              categoryAxis.dataFields.category = "category";
+              categoryAxis.renderer.labels.template.location = 0.5;
+              categoryAxis.renderer.labels.template.horizontalCenter = "right";
+              categoryAxis.renderer.grid.template.location = 0;
+              categoryAxis.renderer.tooltipLocation = 0.5;
+              categoryAxis.renderer.grid.template.strokeOpacity = 0.07;
+              categoryAxis.renderer.axisFills.template.disabled = true;
+              categoryAxis.interactionsEnabled = false;
+              categoryAxis.renderer.minGridDistance = 10;
+
+              var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+              valueAxis.tooltip.disabled = true;
+              valueAxis.renderer.labels.template.horizontalCenter = "left";
+              valueAxis.min = 0;
+              valueAxis.max = 60;
+              valueAxis.strictMinMax = true;
+              valueAxis.renderer.maxLabelPosition = 0.99;
+              valueAxis.renderer.minGridDistance = 10;
+              valueAxis.renderer.grid.template.strokeOpacity = 0.07;
+              valueAxis.renderer.axisFills.template.disabled = true;
+              valueAxis.interactionsEnabled = false;
+
+              var series1 = chart.series.push(new am4charts.RadarColumnSeries());
+              series1.columns.template.tooltipText = "{name}: {valueX.value}";
+              series1.name = "Pollution";
+              series1.dataFields.categoryY = "category";
+              series1.dataFields.valueX = "value1";
+              series1.stacked = true;
+
+              var series2 = chart.series.push(new am4charts.RadarColumnSeries());
+              series2.columns.template.tooltipText = "{name}: {valueX.value}";
+              series2.name = "Shortage";
+              series2.dataFields.categoryY = "category";
+              series2.dataFields.valueX = "value2";
+              series2.stacked = true;
+
+              var series3 = chart.series.push(new am4charts.RadarColumnSeries());
+              series3.columns.template.tooltipText = "{name}: {valueX.value}";
+              series3.name = "Leakage";
+              series3.dataFields.categoryY = "category";
+              series3.dataFields.valueX = "value3";
+              series3.stacked = true;
+
+              var series4 = chart.series.push(new am4charts.RadarColumnSeries());
+              series4.columns.template.tooltipText = "{name}: {valueX.value}";
+              series4.name = "Others";
+              series4.dataFields.categoryY = "category";
+              series4.dataFields.valueX = "value4";
+              series4.stacked = true;
+
+              chart.seriesContainer.zIndex = -1;
+
+              chart.scrollbarX = new am4core.Scrollbar();
+              chart.scrollbarX.exportable = false;
+              chart.scrollbarY = new am4core.Scrollbar();
+              chart.scrollbarY.exportable = false;
+
+              chart.cursor = new am4charts.RadarCursor();
+              chart.cursor.lineY.disabled = true;
+
+              }); // end am4core.ready()
             </script>
           </div>
         </div>
@@ -233,63 +339,77 @@
           </div>
           <!-- Card body -->
           <div class="card-body">
-            <div id="chart-api"></div>
+            <div id="chart-type" style="width:100%;height:300px;"></div>
+            <!-- Chart code -->
             <script>
-              var options = {
-                series: [{
-                name: 'Pollution',
-                data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-              }, {
-                name: 'Shortage',
-                data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-              }, {
-                name: 'Leakage',
-                data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-              }, {
-                name: 'Others',
-                data: [25, 32, 26, 16, 65, 12, 43, 11, 19]
-              }],
-                chart: {
-                type: 'area',
-                height: 350
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: '55%',
-                  endingShape: 'rounded'
-                },
-              },
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-              },
-              xaxis: {
-                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-              },
-              yaxis: {
-                title: {
-                  text: 'cases'
-                }
-              },
-              fill: {
-                opacity: 1
-              },
-              tooltip: {
-                y: {
-                  formatter: function (val) {
-                    return "" + val + " cases"
-                  }
-                }
-              }
-              };
+              am4core.ready(function() {
 
-              var chart = new ApexCharts(document.querySelector("#chart-api"), options);
-              chart.render();
+              // Themes begin
+              am4core.useTheme(am4themes_animated);
+              // Themes end
+
+              // Create chart instance
+              var chart = am4core.create("chart-type", am4charts.XYChart);
+
+              // Add data
+              chart.data = [{
+                "year": "2017",
+                "value1": 130,
+                "value2": 100,
+                "value3": 125,
+                "value4": 111
+              }, {
+                "year": "2018",
+                "value1": 154,
+                "value2": 143,
+                "value3": 100,
+                "value4": 90
+              }, {
+                "year": "2019",
+                "value1": 95,
+                "value2": 103,
+                "value3": 97,
+                "value4": 143
+              }];
+
+              chart.legend = new am4charts.Legend();
+              chart.legend.position = "right";
+
+              // Create axes
+              var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+              categoryAxis.dataFields.category = "year";
+              categoryAxis.renderer.grid.template.opacity = 0;
+
+              var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+              valueAxis.min = 0;
+              valueAxis.renderer.grid.template.opacity = 0;
+              valueAxis.renderer.ticks.template.strokeOpacity = 0.5;
+              valueAxis.renderer.ticks.template.stroke = am4core.color("#495C43");
+              valueAxis.renderer.ticks.template.length = 10;
+              valueAxis.renderer.line.strokeOpacity = 0.5;
+              valueAxis.renderer.baseGrid.disabled = true;
+              valueAxis.renderer.minGridDistance = 40;
+
+              // Create series
+              function createSeries(field, name) {
+                var series = chart.series.push(new am4charts.ColumnSeries());
+                series.dataFields.valueX = field;
+                series.dataFields.categoryY = "year";
+                series.stacked = true;
+                series.name = name;
+                
+                var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+                labelBullet.locationX = 0.5;
+                labelBullet.label.text = "{valueX}";
+                labelBullet.label.fill = am4core.color("#fff");
+              }
+
+              createSeries("value1", "Pollution");
+              createSeries("value2", "Shortage");
+              createSeries("value3", "Leakage");
+              createSeries("value4", "Others");
+
+              }); // end am4core.ready()
             </script>
           </div>
         </div>
