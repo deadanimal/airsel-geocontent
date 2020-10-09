@@ -41,6 +41,8 @@ def create_or_update_role(sender, instance, created, **kwargs):
 class Geotag(models.Model):
     STATUS_CHOICE = (
         ('pending', 'Pending'),
+        ('investigate', 'Under Investigation'),
+        ('action', 'In Action'),
         ('solved', 'Solved'),
     )
     TYPE_CHOICE = (
@@ -52,7 +54,7 @@ class Geotag(models.Model):
     title = models.CharField(max_length=100, null=True, blank=True)
     description = models.TextField(max_length=200, null=True, blank=True)
     type = models.CharField(max_length=20, choices=TYPE_CHOICE, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICE, null=True, blank=True)
+    status = models.CharField(max_length=20, default="pending", choices=STATUS_CHOICE, null=True, blank=True)
     latitude = models.CharField(max_length=100, null=True, blank=True)
     longitude = models.CharField(max_length=100, null=True, blank=True)
     location = models.TextField(max_length=1000, null=True, blank=True)
