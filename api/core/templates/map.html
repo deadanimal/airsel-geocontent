@@ -215,7 +215,14 @@
           <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-body">
-              {{ geotag_form | crispy }}
+              {{ geotag_form.title|as_crispy_field }}
+              {{ geotag_form.description|as_crispy_field }}
+              {{ geotag_form.type.as_hidden }}
+              {{ geotag_form.status|as_crispy_field }}
+              {{ geotag_form.latitude.as_hidden }}
+              {{ geotag_form.longitude.as_hidden }}
+              {{ geotag_form.file|as_crispy_field }}
+              {{ geotag_form.location.as_hidden }}
             </div>
             <div class="modal-footer">
               <button type="submit" name="close" class="btn btn-secondary">Close</button>
